@@ -64,8 +64,11 @@ bun run dev
 #### Running Tests
 
 ```bash
-# Run all tests
+# Run all tests locally (requires local Redis and PostgreSQL)
 bun test
+
+# Run tests in Docker containers (isolated environment)
+bun run test:docker
 
 # Run linting
 bun run lint
@@ -73,6 +76,25 @@ bun run lint
 # Run type checking
 bun run typecheck
 ```
+
+#### Docker Testing
+
+The project supports running tests in Docker containers with an isolated network:
+
+```bash
+# Run tests with Docker containers
+bun run test:docker
+
+# Manual setup/cleanup (usually not needed)
+bun run test:docker:setup   # Create test network
+bun run test:docker:cleanup # Remove test containers and network
+```
+
+The Docker test setup:
+- Creates a dedicated `telerpg-test-network` Docker network
+- Starts PostgreSQL and Redis containers in the network
+- Runs tests in an app container connected to the same network
+- Automatically cleans up containers and network after testing
 
 ### Docker Development
 
@@ -119,7 +141,10 @@ bun run migrate:down
 
 - `bun start` - Start the application
 - `bun run dev` - Start with watch mode
-- `bun test` - Run tests
+- `bun test` - Run tests locally
+- `bun run test:docker` - Run tests in Docker containers (recommended)
+- `bun run test:docker:setup` - Create Docker test network
+- `bun run test:docker:cleanup` - Remove Docker test containers/network
 - `bun run lint` - Run ESLint
 - `bun run typecheck` - Run TypeScript type checking
 - `bun run migrate:up` - Run database migrations
