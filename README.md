@@ -78,13 +78,13 @@ bun run typecheck
 
 ```bash
 # Build and start all services including the app
-docker-compose up -d
+docker compose up -d
 
 # View logs
-docker-compose logs -f app
+docker compose logs -f app
 
 # Stop all services
-docker-compose down
+docker compose down
 ```
 
 ## Project Structure

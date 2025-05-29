@@ -12,8 +12,8 @@
     "test": "bun test",
     "migrate:up": "bun run scripts/migrate.ts up",
     "migrate:down": "bun run scripts/migrate.ts down",
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down"
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
