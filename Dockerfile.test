@@ -1,0 +1,16 @@
+FROM oven/bun:1.2.14-slim
+
+WORKDIR /app
+
+# Copy package.json and bun.lock files
+COPY package.json bun.lock ./
+
+# Copy source code
+COPY . .
+
+# Install dependencies using the host's node_modules if available
+# Otherwise install fresh
+RUN if [ -d "./node_modules" ]; then echo "Using existing node_modules"; else bun install; fi
+
+# Default command for testing
+CMD ["bun", "test"]

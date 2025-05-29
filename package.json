@@ -10,10 +10,13 @@
     "lint:fix": "eslint . --ext .ts,.tsx --fix",
     "typecheck": "tsc --noEmit",
     "test": "bun test",
+    "test:docker": "scripts/test-docker.sh",
+    "test:docker:setup": "docker network create telerpg-test-network || true",
+    "test:docker:cleanup": "docker compose -f docker-compose.test.yml down && docker network rm telerpg-test-network || true",
     "migrate:up": "bun run scripts/migrate.ts up",
     "migrate:down": "bun run scripts/migrate.ts down",
-    "docker:up": "docker-compose up -d",
-    "docker:down": "docker-compose down"
+    "docker:up": "docker compose up -d",
+    "docker:down": "docker compose down"
   },
   "devDependencies": {
     "@eslint/js": "^9.27.0",
