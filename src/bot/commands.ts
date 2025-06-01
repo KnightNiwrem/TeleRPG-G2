@@ -1,4 +1,5 @@
 import { Composer } from "grammy";
+import { fmt, bold } from "@grammyjs/parse-mode";
 import type { BotContext } from "./types";
 
 /**
@@ -8,47 +9,53 @@ export const commands = new Composer<BotContext>();
 
 // Start command
 commands.command("start", async (ctx) => {
-  const welcomeMessage = 
-    "🎮 Welcome to TeleRPG! 🎮\n\n" +
-    "A Telegram-based MMORPG adventure awaits you!\n\n" +
-    "Available commands:\n" +
-    "/start - Show this welcome message\n" +
-    "/help - Get help with commands\n" +
-    "/createcharacter - Create your character\n" +
-    "/profile - View your character profile\n" +
-    "/area - Look around your current area\n\n" +
-    "Start your journey by creating a character with /createcharacter!";
+  const welcomeMessage = fmt`🎮 Welcome to TeleRPG! 🎮
 
-  await ctx.reply(welcomeMessage, { parse_mode: "Markdown" });
+A Telegram-based MMORPG adventure awaits you!
+
+Available commands:
+/start - Show this welcome message
+/help - Get help with commands
+/createcharacter - Create your character
+/profile - View your character profile
+/area - Look around your current area
+
+Start your journey by creating a character with /createcharacter!`;
+
+  await ctx.reply(welcomeMessage.text, { entities: welcomeMessage.entities });
 });
 
 // Help command
 commands.command("help", async (ctx) => {
-  const helpMessage =
-    "🔧 **TeleRPG Commands** 🔧\n\n" +
-    "**Character Management:**\n" +
-    "/createcharacter - Create your character\n" +
-    "/profile - View your character stats\n\n" +
-    "**World Interaction:**\n" +
-    "/area - Look around your current area\n" +
-    "/travel <destination> - Travel to another area\n" +
-    "/explore - Explore your current area\n\n" +
-    "**Combat:**\n" +
-    "/attack - Attack in battle\n" +
-    "/flee - Flee from battle\n\n" +
-    "**Items & Inventory:**\n" +
-    "/inventory - View your items\n" +
-    "/use <item> - Use an item\n\n" +
-    "**Other:**\n" +
-    "/help - Show this help message\n" +
-    "/start - Welcome message";
+  const helpMessage = fmt`🔧 ${bold}TeleRPG Commands${bold} 🔧
 
-  await ctx.reply(helpMessage, { parse_mode: "Markdown" });
+${bold}Character Management:${bold}
+/createcharacter - Create your character
+/profile - View your character stats
+
+${bold}World Interaction:${bold}
+/area - Look around your current area
+/travel <destination> - Travel to another area
+/explore - Explore your current area
+
+${bold}Combat:${bold}
+/attack - Attack in battle
+/flee - Flee from battle
+
+${bold}Items & Inventory:${bold}
+/inventory - View your items
+/use <item> - Use an item
+
+${bold}Other:${bold}
+/help - Show this help message
+/start - Welcome message`;
+
+  await ctx.reply(helpMessage.text, { entities: helpMessage.entities });
 });
 
-// Placeholder for other commands (to be implemented in phases 2-3)
+// Character creation command - starts the conversation
 commands.command("createcharacter", async (ctx) => {
-  await ctx.reply("Character creation is not yet implemented. Coming soon!");
+  await ctx.conversation.enter("createCharacterConversation");
 });
 
 commands.command("profile", async (ctx) => {

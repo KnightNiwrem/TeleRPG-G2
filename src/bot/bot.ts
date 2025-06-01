@@ -1,6 +1,9 @@
 import { Bot, type ErrorHandler } from "grammy";
+import { run, type RunnerHandle } from "@grammyjs/runner";
+import { conversations, createConversation } from "@grammyjs/conversations";
 import { commands } from "./commands";
 import type { BotContext } from "./types";
+import { createPlayerConversation } from "./conversations";
 
 /**
  * Telegram Bot setup with grammY.js
@@ -8,6 +11,7 @@ import type { BotContext } from "./types";
  */
 
 let bot: Bot<BotContext> | null = null;
+let runner: RunnerHandle | null = null;
 
 export function createBot(token: string): Bot<BotContext> {
   return new Bot<BotContext>(token);
@@ -20,6 +24,12 @@ export function getBot(): Bot<BotContext> {
       throw new Error("BOT_TOKEN environment variable is required");
     }
     bot = createBot(token);
+    
+    // Install conversations plugin
+    bot.use(conversations());
+    
+    // Register conversations
+    bot.use(createConversation(createPlayerConversation));
     
     // Define error handler
     const errorHandler: ErrorHandler<BotContext> = (err) => {
@@ -43,14 +53,14 @@ export function getBot(): Bot<BotContext> {
 
 export async function startBot(): Promise<void> {
   const botInstance = getBot();
-  await botInstance.start();
+  runner = run(botInstance);
   console.log("🤖 Bot started successfully!");
 }
 
 export async function stopBot(): Promise<void> {
-  if (bot) {
-    await bot.stop();
-    bot = null;
-    console.log("🤖 Bot stopped.");
+  if (runner) {
+    runner.stop();
+    runner = null;
   }
+  console.log("🤖 Bot stopped.");
 }

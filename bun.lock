@@ -4,6 +4,10 @@
     "": {
       "name": "copilot-bun",
       "dependencies": {
+        "@grammyjs/conversations": "^2.1.0",
+        "@grammyjs/parse-mode": "^2.1.2",
+        "@grammyjs/runner": "^2.0.3",
+        "@grammyjs/storage-psql": "^2.5.1",
         "bullmq": "^5.53.0",
         "grammy": "^1.36.3",
         "ioredis": "^5.6.1",
@@ -39,6 +43,14 @@
     "@eslint/object-schema": ["@eslint/object-schema@2.1.6", "", {}, "sha512-RBMg5FRL0I0gs51M/guSAj5/e14VQ4tpZnQNWwuDT66P14I43ItmPfIZRhO9fUVIPOAQXU47atlywZ/czoqFPA=="],
 
     "@eslint/plugin-kit": ["@eslint/plugin-kit@0.3.1", "", { "dependencies": { "@eslint/core": "^0.14.0", "levn": "^0.4.1" } }, "sha512-0J+zgWxHN+xXONWIyPWKFMgVuJoZuGiIFu8yxk7RJjxkzpGmyja5wRFqZIVtjDVOQpV+Rw0iOAjYPE2eQyjr0w=="],
+
+    "@grammyjs/conversations": ["@grammyjs/conversations@2.1.0", "", { "peerDependencies": { "grammy": "^1.20.1" } }, "sha512-nYoHwFyXcQ2lkQejKReoINknkgFjeIZhyJNMBwHng5UHO/ewHKs1dV2XVaLrKkHTZ1gCZ+dKkjEp26wwHyQeGg=="],
+
+    "@grammyjs/parse-mode": ["@grammyjs/parse-mode@2.1.2", "", { "peerDependencies": { "grammy": "^1.20.1" } }, "sha512-WyIUqoW4rKj4ktyX8lzbpDaF87w3troekdYjaeigwWItQsxEgBa1gVRc+gAH5369Pm7tOh1MTYD1+TF13WqmeA=="],
+
+    "@grammyjs/runner": ["@grammyjs/runner@2.0.3", "", { "dependencies": { "abort-controller": "^3.0.0" }, "peerDependencies": { "grammy": "^1.13.1" } }, "sha512-nckmTs1dPWfVQteK9cxqxzE+0m1VRvluLWB8UgFzsjg62w3qthPJt0TYtJBEdG7OedvfQq4vnFAyE6iaMkR42A=="],
+
+    "@grammyjs/storage-psql": ["@grammyjs/storage-psql@2.5.1", "", {}, "sha512-60O5UJQ7pmsQULp5yQ7dDdYvqOJqTpTqfY9Kk5pfldPMc8RA/3OvKMvLBbH/xfxfA5//RpDU+Psl7K2VxN2OcQ=="],
 
     "@grammyjs/types": ["@grammyjs/types@3.20.0", "", {}, "sha512-KIoikN5VTj6dcJpzMwXtouzaN3BZJ4jihBuEeXzWr25HtEfCF25V3dN11u+uNYi/9sBDvs0KCKZhyN/xFY0MBg=="],
 
