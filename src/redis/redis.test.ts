@@ -11,13 +11,11 @@ let testRedis: Redis;
 
 beforeAll(async () => {
   // Use test Redis connection
-  testRedis = createRedisConnection("redis://localhost:6379");
+  testRedis = createRedisConnection(process.env.REDIS_URL || "redis://localhost:6379");
 });
 
 afterAll(async () => {
-  if (testRedis) {
-    await testRedis.quit();
-  }
+  await testRedis.quit();
   await closeQueues();
 });
 
@@ -36,30 +34,22 @@ test("should connect and ping Redis", async () => {
 });
 
 test("should create BullMQ queues", async () => {
-  try {
-    const generalQueue = getGeneralTasksQueue();
-    const travelQueue = getTravelTasksQueue();
+  const generalQueue = getGeneralTasksQueue();
+  const travelQueue = getTravelTasksQueue();
 
-    expect(generalQueue).toBeDefined();
-    expect(travelQueue).toBeDefined();
-    expect(generalQueue.name).toBe("general_tasks");
-    expect(travelQueue.name).toBe("travel_tasks");
-  } catch (error) {
-    console.log("Skipping BullMQ test - Redis not available:", error);
-  }
+  expect(generalQueue).toBeDefined();
+  expect(travelQueue).toBeDefined();
+  expect(generalQueue.name).toBe("general_tasks");
+  expect(travelQueue.name).toBe("travel_tasks");
 });
 
 test("should add jobs to queues", async () => {
-  try {
-    const generalQueue = getGeneralTasksQueue();
-    
-    const job = await generalQueue.add("test_job", { test: "data" });
-    expect(job).toBeDefined();
-    expect(job.data).toEqual({ test: "data" });
+  const generalQueue = getGeneralTasksQueue();
+  
+  const job = await generalQueue.add("test_job", { test: "data" });
+  expect(job).toBeDefined();
+  expect(job.data).toEqual({ test: "data" });
 
-    // Clean up
-    await job.remove();
-  } catch (error) {
-    console.log("Skipping job test - Redis not available:", error);
-  }
+  // Clean up
+  await job.remove();
 });

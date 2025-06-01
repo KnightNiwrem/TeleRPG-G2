@@ -51,14 +51,12 @@ src/
 - Inventory system
 
 ## Testing Strategy
-- Using Bun's built-in test runner
-- Separate test database (postgres_test service)
-- Test environment variables for isolated testing
+- Using Bun's built-in test runner via `bun test:docker`
+- Volume not used for test db and redis to always start from fresh databases
 
 ## Lessons Learned
 - Kysely types provide excellent compile-time safety for SQL operations
 - BullMQ job data interfaces help maintain type safety across async operations
-- grammY.js command setup is straightforward and flexible
 
 ## TODOs
 - [ ] Implement actual game logic services

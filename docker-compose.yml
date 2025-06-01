@@ -11,7 +11,7 @@ services:
       - ./src:/app/src
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=postgresql://postgres:password@postgres:5432/telerpg_dev
+      - DATABASE_URL=postgresql://postgres:password@postgres:5432/telerpg
       - REDIS_URL=redis://redis:6379
       - BOT_TOKEN=${BOT_TOKEN}
     depends_on:
@@ -22,25 +22,13 @@ services:
   postgres:
     image: postgres:17
     environment:
-      - POSTGRES_DB=telerpg_dev
+      - POSTGRES_DB=telerpg
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=password
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    restart: unless-stopped
-
-  postgres_test:
-    image: postgres:17
-    environment:
-      - POSTGRES_DB=telerpg_test
-      - POSTGRES_USER=postgres
-      - POSTGRES_PASSWORD=password
-    ports:
-      - "5433:5432"
-    volumes:
-      - postgres_test_data:/var/lib/postgresql/data
     restart: unless-stopped
 
   redis:
