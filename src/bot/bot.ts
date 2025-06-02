@@ -1,4 +1,5 @@
 import { Bot, type ErrorHandler, API_CONSTANTS } from "grammy";
+import { run, type RunnerHandle } from "@grammyjs/runner";
 import { conversations, createConversation } from "@grammyjs/conversations";
 import { chatMembers } from "@grammyjs/chat-members";
 import { PsqlAdapter } from "@grammyjs/storage-psql";
@@ -14,6 +15,7 @@ import { getPostgresClient } from "../database/connection.js";
  */
 
 let bot: Bot<BotContext> | null = null;
+let runner: RunnerHandle | null = null;
 
 export function createBot(token: string): Bot<BotContext> {
   return new Bot<BotContext>(token);
@@ -66,19 +68,24 @@ export async function getBot(): Promise<Bot<BotContext>> {
 export async function startBot(): Promise<void> {
   const botInstance = await getBot();
   
-  // Delete webhook to ensure we use polling with all update types for chat members plugin
-  await botInstance.api.deleteWebhook({ drop_pending_updates: true });
+  // Delete webhook to ensure we use polling for chat members plugin
+  await botInstance.api.deleteWebhook();
   
-  // Start polling with all update types including chat_member
-  await botInstance.start({
-    allowed_updates: API_CONSTANTS.ALL_UPDATE_TYPES,
+  // Start runner with all update types including chat_member
+  runner = run(botInstance, {
+    runner: {
+      fetch: {
+        allowed_updates: API_CONSTANTS.ALL_UPDATE_TYPES,
+      },
+    },
   });
   console.log("🤖 Bot started successfully!");
 }
 
 export async function stopBot(): Promise<void> {
-  if (bot) {
-    await bot.stop();
+  if (runner) {
+    runner.stop();
+    runner = null;
   }
   console.log("🤖 Bot stopped.");
 }
