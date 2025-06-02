@@ -1,5 +1,5 @@
 import { Kysely, PostgresDialect } from "kysely";
-import { Pool } from "pg";
+import { Pool, Client } from "pg";
 import type { Database } from "./types.js";
 
 /**
@@ -47,4 +47,22 @@ export async function closeDatabase(): Promise<void> {
     await db.destroy();
     db = null;
   }
+}
+
+/**
+ * Creates a PostgreSQL client for use with storage adapters
+ */
+export function createPostgresClient(connectionString: string): Client {
+  return new Client({ connectionString });
+}
+
+/**
+ * Gets a PostgreSQL client using the main database connection string
+ */
+export function getPostgresClient(): Client {
+  const connectionString = process.env.DATABASE_URL;
+  if (!connectionString) {
+    throw new Error("DATABASE_URL environment variable is required");
+  }
+  return createPostgresClient(connectionString);
 }

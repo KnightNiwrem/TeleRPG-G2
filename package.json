@@ -26,6 +26,7 @@
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@grammyjs/chat-members": "^1.2.0",
     "@grammyjs/conversations": "^2.1.0",
     "@grammyjs/parse-mode": "^2.1.2",
     "@grammyjs/runner": "^2.0.3",
