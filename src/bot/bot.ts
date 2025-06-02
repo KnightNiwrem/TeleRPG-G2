@@ -1,4 +1,4 @@
-import { Bot, type ErrorHandler } from "grammy";
+import { Bot, type ErrorHandler, API_CONSTANTS } from "grammy";
 import { run, type RunnerHandle } from "@grammyjs/runner";
 import { conversations, createConversation } from "@grammyjs/conversations";
 import { chatMembers } from "@grammyjs/chat-members";
@@ -67,7 +67,18 @@ export async function getBot(): Promise<Bot<BotContext>> {
 
 export async function startBot(): Promise<void> {
   const botInstance = await getBot();
-  runner = run(botInstance);
+  
+  // Delete webhook to ensure we use polling for chat members plugin
+  await botInstance.api.deleteWebhook();
+  
+  // Start runner with all update types including chat_member
+  runner = run(botInstance, {
+    runner: {
+      fetch: {
+        allowed_updates: API_CONSTANTS.ALL_UPDATE_TYPES,
+      },
+    },
+  });
   console.log("🤖 Bot started successfully!");
 }
 
