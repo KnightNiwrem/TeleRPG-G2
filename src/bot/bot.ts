@@ -1,9 +1,13 @@
-import { Bot, type ErrorHandler } from "grammy";
+import { Bot, type ErrorHandler, API_CONSTANTS } from "grammy";
 import { run, type RunnerHandle } from "@grammyjs/runner";
 import { conversations, createConversation } from "@grammyjs/conversations";
+import { chatMembers } from "@grammyjs/chat-members";
+import { PsqlAdapter } from "@grammyjs/storage-psql";
+import type { ChatMember } from "grammy/types";
 import { commands } from "./commands";
 import type { BotContext } from "./types";
 import { createPlayerConversation } from "./conversations";
+import { getPostgresClient } from "../database/connection.js";
 
 /**
  * Telegram Bot setup with grammY.js
@@ -17,7 +21,7 @@ export function createBot(token: string): Bot<BotContext> {
   return new Bot<BotContext>(token);
 }
 
-export function getBot(): Bot<BotContext> {
+export async function getBot(): Promise<Bot<BotContext>> {
   if (!bot) {
     const token = process.env.BOT_TOKEN;
     if (!token) {
@@ -41,6 +45,16 @@ export function getBot(): Bot<BotContext> {
     // Set up bot with error handling and private chat restriction
     const protectedBot = bot.errorBoundary(errorHandler);
     const privateChatBot = protectedBot.chatType("private");
+    
+    // Set up chat members plugin with PostgreSQL storage
+    const client = getPostgresClient();
+    await client.connect();
+    const chatMembersAdapter = await PsqlAdapter.create({ 
+      client, 
+      tableName: "chat_members" 
+    }) as PsqlAdapter<ChatMember>;
+    privateChatBot.use(chatMembers(chatMembersAdapter));
+    
     privateChatBot.use(commands);
     
     // Handle unknown commands
@@ -52,8 +66,19 @@ export function getBot(): Bot<BotContext> {
 }
 
 export async function startBot(): Promise<void> {
-  const botInstance = getBot();
-  runner = run(botInstance);
+  const botInstance = await getBot();
+  
+  // Delete webhook to ensure we use polling for chat members plugin
+  await botInstance.api.deleteWebhook();
+  
+  // Start runner with all update types including chat_member
+  runner = run(botInstance, {
+    runner: {
+      fetch: {
+        allowed_updates: API_CONSTANTS.ALL_UPDATE_TYPES,
+      },
+    },
+  });
   console.log("🤖 Bot started successfully!");
 }
 
