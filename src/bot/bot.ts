@@ -59,7 +59,7 @@ export async function startBot(): Promise<void> {
 
 export async function stopBot(): Promise<void> {
   if (runner) {
-    runner.stop();
+    await runner.stop();
     runner = null;
   }
   console.log("🤖 Bot stopped.");

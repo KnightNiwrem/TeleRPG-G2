@@ -21,19 +21,19 @@ ${italic}(Please enter a name between 2-20 characters)${italic}`;
 
   // Get player name
   const playerName = await conversation.waitFor("message:text").and(
-    (ctx) => {
+    async (ctx) => {
       const name = ctx.message.text.trim();
       
       if (name.length < 2 || name.length > 20) {
-        ctx.reply("Player name must be between 2-20 characters. Please try again:");
+        await ctx.reply("Player name must be between 2-20 characters. Please try again:");
         return false;
       }
-
+    
       if (!/^[a-zA-Z\s]+$/.test(name)) {
-        ctx.reply("Player name can only contain letters and spaces. Please try again:");
+        await ctx.reply("Player name can only contain letters and spaces. Please try again:");
         return false;
       }
-
+    
       return true;
     }
   ).then(ctx => ctx.message.text.trim());
@@ -47,8 +47,10 @@ ${italic}(Please enter a name between 2-20 characters)${italic}`;
 Each class has unique abilities and playstyles:`;
 
   const classKeyboard = new InlineKeyboard()
-    .text("⚔️ Warrior", "class_warrior").text("🔮 Mage", "class_mage").row()
-    .text("🗡️ Rogue", "class_rogue").text("🏹 Archer", "class_archer");
+    .text("⚔️ Warrior", "class_warrior")
+    .text("🔮 Mage", "class_mage").row()
+    .text("🗡️ Rogue", "class_rogue")
+    .text("🏹 Archer", "class_archer");
 
   await ctx.reply(classSelection.text, {
     entities: classSelection.entities,
@@ -88,27 +90,27 @@ Each stat must be at least 1, and the total must equal 10.`;
   await ctx.reply(statsMessage.text, { entities: statsMessage.entities });
 
   const stats = await conversation.waitFor("message:text").and(
-    (ctx) => {
+    async (ctx) => {
       const input = ctx.message.text.trim().split(/\s+/);
       
       if (input.length !== 4) {
-        ctx.reply("Please enter exactly 4 numbers separated by spaces: `Str Int Dex Con`");
+        await ctx.reply("Please enter exactly 4 numbers separated by spaces: `Str Int Dex Con`");
         return false;
       }
-
+    
       const numbers = input.map(n => parseInt(n, 10));
       
       if (numbers.some(n => isNaN(n) || n < 1)) {
-        ctx.reply("All stats must be positive numbers (at least 1). Please try again:");
+        await ctx.reply("All stats must be positive numbers (at least 1). Please try again:");
         return false;
       }
-
+    
       const total = numbers.reduce((sum, n) => sum + n, 0);
       if (total !== 10) {
-        ctx.reply(`Total must equal 10 (you entered ${total}). Please try again:`);
+        await ctx.reply(`Total must equal 10 (you entered ${total}). Please try again:`);
         return false;
       }
-
+    
       return true;
     }
   ).then(ctx => {
