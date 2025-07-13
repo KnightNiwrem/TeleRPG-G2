@@ -5,7 +5,6 @@
 - This project is dockerized.
 
 ## Development Workflow
-- Always run `bun install` before running lint, typecheck, or test
 - Lint, typecheck, and test should pass before completing the task
 - If docker-compose.test.yml is present, use `bun test:docker` to run tests in a Docker environment
 
